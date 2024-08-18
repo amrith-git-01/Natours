@@ -66,7 +66,9 @@ const connectSrcUrls = [
   'https://tile.openstreetmap.org',
   'https://*.cloudflare.com',
   'http://localhost:8000/api/v1/users/login',
+  'http://localhost:8000/api/v1/users/logout',
   'http://localhost/api/v1/bookings/checkout-session/',
+  'http://127.0.0.1:3000'
 ];
 
 const fontSrcUrls = ['fonts.googleapis.com', 'fonts.gstatic.com'];
