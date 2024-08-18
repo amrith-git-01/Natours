@@ -19,6 +19,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -86,22 +87,22 @@ app.use(
 
 //DEVELOPMENT LOGGING
 if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
+  app.use(morgan('dev'));
 }
 
 //LIMIT REQUESTS
 const limiter = rateLimit({
-    max: 100,
-    windowMs: 60 * 60 * 1000,
-    message: 'Too many requests from this IP, please try again in an hour!'
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour!'
 });
 
 app.use('/api', limiter);
 
 //BODY PARSER
 app.use(express.json({
-    limit: '10kb'
-    //restricting the request data to be 10kb of size
+  limit: '10kb'
+  //restricting the request data to be 10kb of size
 }));//MiddleWare
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
@@ -114,15 +115,17 @@ app.use(xss());
 
 //prevent parameter pollution
 app.use(hpp({
-    whitelist: [
-        'duration',
-        'ratingsQuantity',
-        'ratingsAverage',
-        'maxGroupSize',
-        'difficulty',
-        'price'
-    ]
+  whitelist: [
+    'duration',
+    'ratingsQuantity',
+    'ratingsAverage',
+    'maxGroupSize',
+    'difficulty',
+    'price'
+  ]
 }));
+
+app.use(compression());
 
 //our own middleware
 // app.use((req, res, next) => {
@@ -132,9 +135,9 @@ app.use(hpp({
 
 //TEST MIDDLEWARE
 app.use((req, res, next) => {
-    req.requestTime = new Date().toISOString();
-    // console.log(req.cookies);
-    next();
+  req.requestTime = new Date().toISOString();
+  // console.log(req.cookies);
+  next();
 });
 
 
@@ -290,18 +293,18 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
-    // res.status(404).json({
-    //     status: 'fail',
-    //     message: `Cant find ${req.originalUrl} on this server!!!`
-    // });
+  // res.status(404).json({
+  //     status: 'fail',
+  //     message: `Cant find ${req.originalUrl} on this server!!!`
+  // });
 
-    //Creating a error object//
+  //Creating a error object//
 
-    // const err = new Error(`Cant find ${req.originalUrl} on this server!!!`);
-    // err.status='fail';
-    // err.statusCode=404;
+  // const err = new Error(`Cant find ${req.originalUrl} on this server!!!`);
+  // err.status='fail';
+  // err.statusCode=404;
 
-    next(new AppError(`Cant find ${req.originalUrl} on this server!!!`, 404));
+  next(new AppError(`Cant find ${req.originalUrl} on this server!!!`, 404));
 });
 
 app.use(globalErrorHandler);

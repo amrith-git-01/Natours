@@ -99,7 +99,7 @@ userSchema.methods.createPasswordResetToken = function () {
 
     this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
-    console.log({ resetToken }, this.passwordResetToken);
+    // console.log({ resetToken }, this.passwordResetToken);
     //first: to be sent in url to the users 
     //second to be stored in the database for limited amount of time 
 

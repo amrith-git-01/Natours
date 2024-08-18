@@ -49,7 +49,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
 
     const url = `${req.protocol}://${req.get('host')}/me`;
-    console.log(url);
+    // console.log(url);
     await new Email(newUser, url).sendWelcome();
 
     // console.log(newUser);
@@ -100,7 +100,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     //Verification of the token
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    console.log(decoded);
+    // console.log(decoded);
 
     //Check if the user still exists
     const freshUser = await User.findById(decoded.id);
@@ -126,7 +126,7 @@ exports.isLoggedIn = async (req, res, next) => {
 
             //verify the token
             const decoded = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRET);
-            console.log(decoded);
+            // console.log(decoded);
 
             //Check if the user still exists
             const currentUser = await User.findById(decoded.id);
@@ -199,11 +199,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 exports.resetPassword = catchAsync(async (req, res, next) => {
     //get user based on the token
     const hashedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
-    console.log(hashedToken);
+    // console.log(hashedToken);
 
     const user = await User.findOne({ passwordResetToken: hashedToken, passwordResetExpires: { $gt: Date.now() } });
 
-    console.log(user);
+    // console.log(user);
 
     //set the new password only if the token hasnt expired and there is a user 
     if (!user) {
